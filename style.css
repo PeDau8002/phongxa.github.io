@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Share+Tech+Mono&display=swap');
+
+body, html {
+    margin: 0; padding: 0; height: 100vh;
+    background: #020202; display: flex; align-items: center; justify-content: center;
+    font-family: 'Share Tech Mono', monospace; overflow: hidden;
+    color: #00ff41;
+}
+
+.bg-grid {
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px; z-index: -1;
+}
+
+.card-container { width: 380px; height: 550px; perspective: 2000px; }
+
+.card {
+    width: 100%; height: 100%; position: relative;
+    transform-style: preserve-3d; transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+    border-radius: 15px;
+}
+
+.flipped { transform: rotateY(180deg); }
+
+.card-face {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; border-radius: 15px;
+    border: 2px solid #00ff41; box-sizing: border-box;
+    background: #050505; display: flex; flex-direction: column;
+    padding: 30px; align-items: center; justify-content: space-between;
+    box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.2), 0 0 30px rgba(0, 255, 65, 0.1);
+}
+
+.card-face::before, .card-face::after {
+    content: ''; position: absolute; width: 40px; height: 40px;
+    border: 4px solid #00ff41;
+}
+.card-face::before { top: -2px; left: -2px; border-right: none; border-bottom: none; border-radius: 15px 0 0 0; }
+.card-face::after { bottom: -2px; right: -2px; border-left: none; border-top: none; border-radius: 0 0 15px 0; }
+
+.status-light { width: 10px; height: 10px; background: #00ff41; border-radius: 50%; box-shadow: 0 0 10px #00ff41; margin-bottom: 10px; }
+
+h2 { font-family: 'Orbitron', sans-serif; font-size: 1rem; text-align: center; letter-spacing: 2px; line-height: 1.6; }
+
+.input-group { width: 100%; text-align: center; }
+
+input {
+    background: rgba(0, 255, 65, 0.1); border: 1px solid #00ff41;
+    color: #fff; font-family: inherit; font-size: 1.2rem;
+    padding: 10px; width: 80%; outline: none; text-align: center;
+    letter-spacing: 5px; margin-bottom: 15px;
+}
+
+.btn-decrypt {
+    width: 80%; padding: 12px; background: #00ff41; color: #000;
+    font-weight: 900; border: none; cursor: pointer; letter-spacing: 2px;
+    transition: background 0.3s;
+}
+
+.btn-decrypt:hover { background: #00ce35; }
+
+.footer-info { font-size: 0.7rem; opacity: 0.5; }
+
+/* Mặt sau */
+.back { transform: rotateY(180deg); border-color: #ff003c; color: #ff003c; }
+.back::before, .back::after { border-color: #ff003c; }
+
+.code-display { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 900; text-shadow: 0 0 20px #ff003c; }
+.warning-icon { font-size: 3rem; animation: pulse 1s infinite; }
+.footer-warning { text-align: center; font-size: 0.7rem; }
+
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+.shake { animation: shakeAnim 0.4s; }
+@keyframes shakeAnim {
+    0%, 100% { transform: translate(0,0); }
+    25% { transform: translate(-10px, 0); }
+    75% { transform: translate(10px, 0); }
+}
