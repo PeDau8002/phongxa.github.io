@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUCLEAR CIPHER | TỔ 4 - POLONIUM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;800&family=Space+Grotesk:wght@300;700&display=swap');
+
+        :root {
+            --primary-grad: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --po-glow: linear-gradient(135deg, #74ebd5 0%, #9face6 100%); /* Màu xanh bức xạ Polonium */
+            --danger-grad: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100vh;
+            background: #080a0f; 
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.1) 0%, transparent 35%),
+                radial-gradient(circle at 85% 85%, rgba(245, 87, 108, 0.1) 0%, transparent 35%);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden;
+        }
+
+        .card-container { width: 360px; height: 580px; perspective: 1500px; }
+
+        .card {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 35px;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 40px; box-sizing: border-box;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Mặt trước */
+        .front { z-index: 2; }
+        .chip {
+            width: 55px; height: 42px; background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            border-radius: 8px; margin-bottom: 30px; position: relative;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        h2 {
+            font-weight: 300; font-size: 1.2rem; color: #fff;
+            text-align: center; margin-bottom: 40px; line-height: 1.6;
+        }
+
+        input {
+            width: 100%; padding: 16px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border); border-radius: 18px;
+            color: #fff; font-size: 1.1rem; text-align: center;
+            margin-bottom: 20px; transition: 0.3s;
+        }
+        input:focus { border-color: #00f2fe; background: rgba(255,255,255,0.08); outline: none; }
+
+        .btn-decrypt {
+            width: 100%; padding: 16px; border-radius: 18px; border: none;
+            background: var(--primary-grad); color: white; font-weight: 800;
+            cursor: pointer; letter-spacing: 1px; transition: 0.3s;
+        }
+        .btn-decrypt:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(79, 172, 254, 0.5); }
+
+        /* Mặt sau - POLONIUM MODE */
+        .back { transform: rotateY(180deg); background: rgba(10, 12, 18, 0.95); border-color: rgba(116, 235, 213, 0.4); }
+
+        .element-box {
+            width: 170px; height: 170px; border-radius: 30px;
+            background: rgba(116, 235, 213, 0.05); 
+            border: 2px solid rgba(116, 235, 213, 0.6);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin-top: 20px; position: relative;
+            box-shadow: 0 0 40px rgba(116, 235, 213, 0.2);
+        }
+
+        .atomic-num { position: absolute; top: 18px; left: 22px; font-size: 1.3rem; color: #74ebd5; font-weight: 800; }
+        .atomic-symbol { 
+            font-size: 5rem; font-weight: 800; color: #fff; 
+            text-shadow: 0 0 25px rgba(116, 235, 213, 0.8);
+        }
+        .element-name { font-size: 0.9rem; color: #74ebd5; letter-spacing: 3px; font-weight: bold; margin-top: 5px; }
+
+        .revealed-letter {
+            font-family: 'Space Grotesk', sans-serif; font-size: 10rem; font-weight: 700;
+            background: var(--danger-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            opacity: 0; transform: translateY(30px); transition: 1.2s ease-out;
+            margin-top: 10px; filter: drop-shadow(0 10px 30px rgba(245, 87, 108, 0.5));
+        }
+
+        .show-a { opacity: 1; transform: translateY(0); }
+
+        .status-tag {
+            padding: 6px 18px; border-radius: 25px; background: rgba(116, 235, 213, 0.1);
+            color: #74ebd5; font-size: 0.7rem; font-weight: 800; margin-bottom: 20px;
+            border: 1px solid rgba(116, 235, 213, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card-container">
+    <div id="cipherCard" class="card">
+        
+        <div class="card-face front">
+            <div class="chip"></div>
+            <h2>Chất thải hạt nhân thường được chôn sâu trong:</h2>
+            <input type="text" id="passInput" placeholder="Nhập đáp án..." autocomplete="off">
+            <button class="btn-decrypt" onclick="decrypt()">XÁC MINH DANH TÍNH</button>
+            <p style="margin-top: auto; color: rgba(255,255,255,0.3); font-size: 0.65rem; letter-spacing: 2px;">SECURED BY TEAM 04 // 2026</p>
+        </div>
+
+        <div class="card-face back">
+            <div class="status-tag">DECRYPT SUCCESS</div>
+            
+            <div class="element-box">
+                <div class="atomic-num" id="aNum">90</div>
+                <div class="atomic-symbol" id="aSym">Th</div>
+                <div class="element-name" id="eName">THORIUM</div>
+            </div>
+
+            <div id="bigA" class="revealed-letter">N</div>
+
+            <div style="margin-top: auto; text-align: center;">
+                <p style="color: #fff; font-size: 0.8rem; margin: 0; font-weight: 700;">MẬT MÃ TỔ 4</p>
+                <small style="color: #74ebd5; font-size: 0.6rem; opacity: 0.7;">HIGH RADIATION ISOTOPE</small>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function decrypt() {
+        const input = document.getElementById('passInput');
+        const val = input.value.toLowerCase().trim();
+        const card = document.getElementById('cipherCard');
+        const bigA = document.getElementById('bigA');
+        const aNum = document.getElementById('aNum');
+        const aSym = document.getElementById('aSym');
+        const eName = document.getElementById('eName');
+
+        if(val === 'đất' || val === 'lòng đất') {
+            card.classList.add('flipped');
+            
+            // Hiệu ứng xáo trộn trước khi hiện Polonium
+            let count = 0;
+            const timer = setInterval(() => {
+                aNum.innerText = Math.floor(Math.random() * 99);
+                aSym.innerText = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String.fromCharCode(97 + Math.floor(Math.random() * 26));
+                
+                count++;
+                if(count > 15) {
+                    clearInterval(timer);
+                    aNum.innerText = "89";
+                    aSym.innerText = "Ac";
+                    eName.innerText = "ACTINIUM";
+                    
+                    setTimeout(() => {
+                        bigA.classList.add('show-a');
+                    }, 400);
+                }
+            }, 60);
+
+        } else {
+            card.classList.add('shake');
+            input.style.borderColor = '#f5576c';
+            input.value = '';
+            setTimeout(() => {
+                card.classList.remove('shake');
+                input.style.borderColor = 'rgba(255,255,255,0.1)';
+            }, 400);
+        }
+    }
+
+    document.getElementById('passInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') decrypt();
+    });
+</script>
+
+</body>
+</html>
